@@ -1,0 +1,5 @@
+file_01.bin md5 47cd1232810f698c49fa67da1c7d5cbe
+file_02.bin md5 57243d3b0f42ab9b5840ade59f65254f
+file_03.bin md5 55dd6eb503806cf5f55add18179ff391
+file_04.txt md5 c3071d34e62b99e3ca80b784b7771cd3
+file_04.txt sha1 3c263cb44e84f8daa24a626a90c5d57d6fe330f8
