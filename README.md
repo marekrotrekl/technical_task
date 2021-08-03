@@ -26,9 +26,9 @@ Test system is implemented as a class hierarchy, where test cases are implemente
 
 Each test case has:
 
-•	Unique ID (tc_id) and a name (name)
-•	Separate methods for preparing the system (prep), running the test (run) and cleaning up after the test (clean_up). 
-•	Method execute that defines the common workflow of a test and handles all exceptions. 
+Unique ID (tc_id) and a name (name)
+Separate methods for preparing the system (prep), running the test (run) and cleaning up after the test (clean_up). 
+Method execute that defines the common workflow of a test and handles all exceptions. 
 
 All stages of all test cases along with any exceptions are logged to a log file.
 
