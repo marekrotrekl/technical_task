@@ -16,8 +16,8 @@ class FileListTest(TestCase):
     def prep(self):
         t = int(time.time())
         if (t % 2) != 0:
-            raise StopExecution("Prerequisities Error: Current system time since the Unix Epoch " + 
-            "taken as an integer is not divisible by 2.")
+            raise StopExecution(("Prerequisities Error: Current system time since the Unix Epoch {} " + 
+            "taken as an integer is not divisible by 2.").format(t))
 
     def run(self):
         home_dir = os.path.expanduser('~')
