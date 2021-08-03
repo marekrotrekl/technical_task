@@ -27,38 +27,34 @@ def load_conf_file(file_name):
         with open(file_name) as fh:
             for lino, line in enumerate(fh.readlines()):
                 pars = line.strip().split(' ')
-                if len(pars) == 3:
+                if (len(pars) == 3 and pars[1].lower() in ('md5', 'sha1', 'sha256')):
                     file_list.append(pars)
                 else:
-                    print("Error interpreting %s line No %s, skipping\n" % (
+                    print("Error interpreting {} line No {}, skipping\n".format(
                         os.path.basename(file_name), lino+1))
     except EnvironmentError as err:
-        print("Error loading input file%s\n\n%s" % (
+        print("Error loading input file{}\n\n{}".format(
             os.path.basename(file_name), err))
     return file_list        
 
 def check_files(file_list, folder):    
     for file in file_list:
         file_name, alg, hash = file
-        if alg.lower() in ('md5', 'sha1'):
-            alg = alg.lower()
-        else:
-            print("Algorihtm specification Error of file: %s - %s" % (
-                os.path.basename(file_name), alg))
-        module = eval('hashlib.'+alg+'()')
+        module = eval('hashlib.'+alg.lower()+'()')
         try:            
             with open(os.path.join(folder, file_name), 'rb') as fh:
                 module.update(fh.read())
         except EnvironmentError as err:            
-            print_result(file_name, "NOT FOUND")
+            print_result(os.path.basename(file_name), "NOT FOUND")
             continue
         if module.hexdigest() == hash:
-            print_result(file_name, "OK")
+            print_result(os.path.basename(file_name), "OK")
         else:
-            print_result(file_name, "FAIL") 
+            print_result(os.path.basename(file_name), "FAIL") 
 
 def print_result(file_name, res):
-    print("%s %s" % (file_name, res))
+    WIDTH = 15
+    print("{file_name:<{WIDTH}} {res}".format(**locals()))
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,6 @@
 # technical_task
 
-xcopy.py
+xcopy.py:
 
 Copies files according to the provided configuration file. 
 
@@ -9,7 +9,7 @@ Configuration file must be in XML format. Each entry in the configuration file s
 A sample configuration file is provided (sample_xcopy.xml)
 
 
-int_check.py
+int_check.py:
 
 Reads the input file and checks integrity of the files listed there.
 
@@ -18,7 +18,7 @@ Input file contains file names, hash algorithms (one of MD5, SHA1, SHA256) and f
 A sample input file is provided (sample_int_check.txt), including files to be checked (sample_files directory).
 
 
-TestSuite folder
+TestSuite folder:
 
 Automated test system that has two test cases.
 

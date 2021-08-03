@@ -19,7 +19,7 @@ class RandomFileTest(TestCase):
         mem = p.virtual_memory()
         if mem.total < (1024.**3):
             raise StopExecution(("Prerequisities Error: Current host’s RAM " + 
-            "(%s GB) is less than one gigabyte.") % (mem.total/(1024.**3)))
+            "({} GB) is less than one gigabyte.").format(mem.total/(1024.**3)))
 
     def run(self):
         with open(os.path.join(self._tempfile), 'wb') as fh:

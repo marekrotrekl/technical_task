@@ -24,7 +24,7 @@ def parse_conf_file(conf_file):
     try:
         tree = ET.parse(conf_file)
     except (EnvironmentError, xml.etree.ElementTree.ParseError) as err:
-        print("\nError loading configuration file:\n\n%s\n" % err)        
+        print("\nError loading configuration file:\n\n{}\n".format(err))        
     else:
         for element in tree.findall('file'):        
             try:
@@ -32,12 +32,11 @@ def parse_conf_file(conf_file):
                 'destination_path', 'file_name')]
                 file_list.append(data)
             except (ValueError, LookupError) as err:
-                print('Error interpreting configuration file: %s' % err)
+                print('Error interpreting configuration file: {}'.format(err))
         return file_list
     
 def do_copy(file_list):
     count = 0
-    print()
     for file in file_list:
         source = os.path.join(file[0], file[2])
         dest = file[1]
@@ -45,17 +44,18 @@ def do_copy(file_list):
         try:            
             shutil.copy(source, dest)
             count += 1
-            print_result(file_name, True)
+            print_result(file_name, None)
         except EnvironmentError as err:
-            print_result(file_name, False)
+            print_result(file_name, err)
             continue
-        print("\n{} of {} files copied\n".format(count, len(file_list)))
+    print("\n{} of {} files copied\n".format(count, len(file_list)))
 
-def print_result(file_name, result):
-    if result:
-        print("%s copied" % file_name)
+def print_result(file_name, err):
+    WIDTH = 15
+    if err is None:
+        print("{file_name:<{WIDTH}} copied".format(**locals()))
     else:
-        print("error copying %s" % file_name)    
+        print("{file_name:<{WIDTH}} failure: {err}".format(**locals()))    
 
 if __name__ == '__main__':
     main()

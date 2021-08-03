@@ -1,6 +1,6 @@
 ﻿#!/usr/bin/env python3
 """
-This module contains TestCase class.
+This module contains the TestCase class. The methods prep(), run() and clean_up() need to be reimplemented each time.
 
 >>> from TestCase import TestCase
 >>> first_test = TestCase("ID25", "Functional test")
@@ -38,6 +38,16 @@ class TestCase:
     def name(self):
         return self._name
 
+    @property
+    def log_file(self):
+        return self._log_file
+
+    def log_info(self, msg):
+        logging.info("{} ({}): {}".format(self.name, self.tc_id, msg))
+
+    def log_error(self, err):
+        logging.error(err, exc_info=False)
+
     def prep(self):
         raise NotImplementedError
 
@@ -48,35 +58,39 @@ class TestCase:
         raise NotImplementedError
 
     def _do_prep(self):        
-        logging.info("Test %s %s: Starting system preparation" % (self.name, self.tc_id))
+        self.log_info("Starting system preparation")
         try:
             self.prep()
         except Exception as err:
-            logging.error(err, exc_info=False)
-            logging.info("Interrupting %s %s system preparation" % (self.name, self.tc_id))
+            self.log_error(err)
+            self.log_info("Interrupting system preparation")
+            print(err)
+            print("Interrupting test {} ({}) execution, see log file {}.".format(
+                self.name, self.tc_id, self._log_file))
+            print()
             raise StopExecution
         else:
-            logging.info("Test %s %s: System preparation completed" % (self.name, self.tc_id))
+            self.log_info("System preparation completed")
 
     def _do_run(self):
-        logging.info("Test %s %s: Starting test execution" % (self.name, self.tc_id))
+        self.log_info("Starting test execution")
         try:
             self.run()
         except Exception as err:
-            logging.error(err, exc_info=False)
-            logging.info("Test %s %s: Interrupting test execution" % (self.name, self.tc_id))                                     
+            self.log_error(err)
+            self.log_info("Interrupting test execution")
         else:
-            logging.info("Test %s %s: Test execution completed" % (self.name, self.tc_id))
+            self.log_info("Test execution completed")
             
     def _do_clean_up(self):   
-        logging.info("Test %s %s: Starting clean up" % (self.name, self.tc_id))
+        self.log_info("Starting clean up")
         try:                
             self.clean_up()
         except Exception as err:
-            logging.exception(err, exc_info=False)
-            logging.info("Test %s %s: Interrupting clean up" % (self.name, self.tc_id))
+            self.log_error(err)
+            self.log_info("Interrupting clean up")
         else:
-            logging.info("Test %s %s: Clean up completed\n" % (self.name, self.tc_id))
+            self.log_info("Clean up completed\n")
 
     def execute(self):
         logging.basicConfig(level=logging.INFO, format=LOGGING_FORMAT,
@@ -84,11 +98,12 @@ class TestCase:
         try:
             self._do_prep()
         except StopExecution:
-            print("Interrupting test %s %s execution, see log file %s." % (
-                self.name, self.tc_id, self._log_file))
+            #In case of system preparation error the test shall not be executed.
+            pass
         else:
             self._do_run()
         finally:
+            #System clean up should be performed in all cases.
             self._do_clean_up() 
 
 if __name__ == "__main__":
